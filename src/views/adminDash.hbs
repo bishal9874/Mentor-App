@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .user-card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .user-card p {
+            margin: 10px 0;
+        }
+
+        .btn {
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        form {
+            margin-top: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="dashboard-header">Admin Dashboard</h1>
+        <h1 class="section">Total Active User:{{AllUserData.length}}</h1>
+        <!-- User Management Section -->
+        <div class="section">
+            <h2 class="section-header">User Management</h2>
+            {{#each AllUserData}}
+            <div class="user-card">
+                <p><strong>Name:</strong> {{this.fullName}}</p>
+                <p><strong>Email:</strong> {{this.email}}</p>
+                <p><strong>Phone:</strong> {{this.phone}}</p>
+                <p><strong>Date of Birth:</strong> {{this.dob}}</p>
+                <p><strong>Gender:</strong> {{this.gender}}</p>
+                <p><strong>Enrollment Number:</strong> {{this.enrollmentNumber}}</p>
+                <p><strong>Roll Number:</strong> {{this.rollNumber}}</p>
+                <p><strong>Problem Statement:</strong> {{this.problemStatement}}</p>
+                <p><strong>Address:</strong> {{this.address}}</p>
+                <p><strong>Password:</strong> {{this.password}}</p>
+                <button class="btn edit-profile-btn" onclick="openModal('{{this._id}}')">Edit Profile</button>
+                <!-- Update Form -->
+                <div id="myModal-{{this._id}}" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal('{{this._id}}')">&times;</span>
+                        <form action="/update/{{this._id}}" method="POST">
+                            <div class="form-group">
+                                <label for="name">Full Name:</label>
+                                <input type="text" id="name" name="name" value="{{this.fullName}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" name="email" value="{{this.email}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone:</label>
+                                <input type="text" id="phone" name="phone" value="{{this.phone}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="dob">Date of Birth:</label>
+                                <input type="date" id="dob" name="dob" value="{{this.dob}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender:</label>
+                                <input type="text" id="gender" name="gender" value="{{this.gender}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="enrollment">Enrollment Number:</label>
+                                <input type="text" id="enrollment" name="enrollment" value="{{this.enrollmentNumber}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="roll">Roll Number:</label>
+                                <input type="text" id="roll" name="roll" value=" {{this.rollNumber}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="problem">Problem Statement:</label>
+                                <textarea id="problem" name="problem" rows="4" required disabled>{{this.problemStatement}}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address:</label>
+                                <textarea id="address" name="address" rows="4" required>{{this.address}}</textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" id="password" name="password" value="" required>
+                            </div>
+                            <button type="submit" class="btn">Update</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- Delete Button -->
+                <form action="/delete/{{this._id}}" method="POST">
+                    <button type="submit" class="btn">Delete</button>
+                </form>
+            </div>
+            {{/each}}
+        </div>
+
+        <!-- Other Dashboard Sections -->
+        <!-- Add more sections or widgets here -->
+    </div>
+
+    <script>
+        function openModal(userId) {
+            var modal = document.getElementById('myModal-' + userId);
+            modal.style.display = 'block';
+        }
+
+        function closeModal(userId) {
+            var modal = document.getElementById('myModal-' + userId);
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicked outside of it
+        window.onclick = function (event) {
+            var modals = document.getElementsByClassName('modal');
+            for (var i = 0; i < modals.length; i++) {
+                if (event.target == modals[i]) {
+                    modals[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
